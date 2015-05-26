@@ -51,7 +51,7 @@ class ProjectsController < ApplicationController
     @project.items.complete.destroy_all
     respond_to do |format|
       format.html { redirect_to project_path(@project),
-                    :notice => 'Completed items were successfully cleared.' }
+                    :notice => 'There are no completed items for this project.' }
     end
   end
 
