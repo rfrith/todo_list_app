@@ -1,2 +1,6 @@
-<h2><%= link_to @project.title, edit_project_path(@project) %> Items</h2>
-<%= render :partial => 'items/index', :locals => { :project => @project } %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2 class="panel-title"><%= link_to @project.title, edit_project_path(@project) %> Items</h2>
+  </div>
+  <%= render :partial => 'items/index', :locals => { :project => @project } %>
+</div>

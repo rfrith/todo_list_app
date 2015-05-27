@@ -1,18 +1,29 @@
-<h2>Projects</h2>
-
-<ul>
-  <% if @projects.empty? %>
-  <li>No projects.</li>
-  <% end %>
-<% @projects.each do |project| %>
-<li>
-  <%= link_to project.title,  project_path(project) %>
-  <span>
-    <%= link_to 'Destroy', project,
-                method: :delete, data: { confirm: 'Are you sure?' } %>
-  </span>
-</li>
-<% end %>
-</ul>
-
-<%= link_to 'New Project', new_project_path %>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h2 class="panel-title">Projects</h2>
+  </div>
+  <ul class="list-group">
+    <% if @projects.empty? %>
+    <li class="list-group-item">No projects.</li>
+    <% end %>
+    <% @projects.each do |project| %>
+    <li class="list-group-item">
+      <span class="ml">
+        <%= link_to project.title,  project_path(project) %>
+        <%= link_to edit_project_path(project) do %>
+          <%= icon('pencil-square-o') %>
+        <% end %>
+        <%= link_to project,  method: :delete, data: { confirm: 'Are you sure?' } do %>
+          <%= icon('trash-o') %>
+        <% end %>
+      </span>
+    </li>
+    <% end %>
+  </ul>
+  <div class="panel-footer">
+    <%= link_to new_project_path do %>
+      New Project <%= icon('plus-circle') %>
+    <% end %>
+    <% link_to 'New Project', new_project_path %>
+  </div>
+</div>

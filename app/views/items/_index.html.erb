@@ -1,23 +1,42 @@
-<ul>
+<% content_for :breadcrumb do %>
+  <li class="active"> <%=@project.title%></li>
+<% end %>
+
+<ul class="list-group">
   <% if @project.items.empty? %>
-  <li>No items.</li>
+  <li class="list-group-item mtb2">There are no items yet.  Please click the "New Item" button to add items.</li>
   <% end %>
+
 <% @project.items.each do |item| %>
   <% unless item.deleted? %>
-    <li class="<%= "#{item.done? ? 'done' : 'not-done'}" %>">
-      <%= link_to item.action, edit_project_item_path(@project, item) %>
+    <li class="list-group-item">
+      <div class="pull-left "style="width: auto;">
+
+        <% if item.done? %>
+          <s>
+        <% end %>
+
+        <%= link_to item.action, edit_project_item_path(@project, item), :class => "ml" %>
+
+        <% if item.done? %>
+          </s>
+        <% end %>
+
+      </div>
       <% unless item.done? %>
         <%= button_to 'Done',
               { :controller => :items, :action => :update,
                 :id => item.id, :project_id => @project.id,
                 :item => { :done => true } },
-              { :method => :patch } %>
+              { :method => :patch, :class => "ml" } %>
       <% end %>
     </li>
   <% end %>
 <% end %>
 </ul>
 
-<%= link_to 'New Item', new_project_item_path(project) %>
-<%= link_to 'Clear Completed Items', clear_project_path(project),
-      :method => :delete, :id => "clearer" %>
+<div class="panel-footer">
+  <%= link_to 'New Item', new_project_item_path(project), :class => "btn btn-default" %>
+  <%= link_to 'Clear Completed Items', clear_project_path(project),
+              :method => :delete, :id => "clearer", :class => "btn btn-default" %>
+</div>

@@ -12,21 +12,55 @@
   </head>
   <body>
     <header>
-      <h1>Todo app</h1>
-      <nav>
-        <ul>
-          <li><%= link_to 'Projects', projects_path %></li>
-        </ul>
+
+      <nav class="navbar navbar-default">
+
+        <div class="container-fluid">
+
+          <div class="navbar-header">
+
+            <%= link_to 'TODO APP', projects_path, class: 'navbar-brand', data: { no_turbolink: true } %>
+
+          </div>
+
+          <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav navbar-left">
+
+            </ul>
+          </div>
+        </div>
       </nav>
+
+      <div id="breadcrumb-nav" class="text-center">
+        <ol class="breadcrumb">
+          <li><%= link_to 'Projects', projects_path %></li>
+          <%= content_for?(:breadcrumb) ? yield(:breadcrumb) : "" %>
+        </ol>
+      </div>
+
     </header>
 
     <div id="main">
-      <p id="notice"><%= notice %></p>
-      <%= yield %>
+      <% if(notice) %>
+      <div class="container-fluid">
+        <h4 id="notice" class="bg-success well-lg"><%= notice %></h4>
+      </div>
+      <% end %>
+      <div class="container">
+        <div class="">
+          <%= yield %>
+        </div>
+      </div>
     </div>
 
     <footer>
-      <p><%=Date.today.strftime("%Y")%></p>
+      <div class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <span class="navbar-brand " style="color: #666666;"><%=Date.today.strftime("%Y")%></span>
+          </div>
+        </div>
+      </div>
     </footer>
   </body>
 </html>

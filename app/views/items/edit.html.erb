@@ -1,3 +1,7 @@
+<% content_for :breadcrumb do %>
+  <li><%=link_to @project.title, project_path(@project)%></li>
+  <li class="active"> <%=@item.action%></li>
+<% end %>
 <h2>Edit Item</h2>
 <%= form_for([@project, @item], :url => { :action => :update }) do |f| %>
   <% if @item.errors.any? %>
@@ -19,11 +23,15 @@
     <%= f.label :action %><br>
     <%= f.text_field :action, :size => "80" %>
   </div>
+  <br>
   <div class="field">
     <%= f.label :done, 'Done?' %>
     <%= f.check_box :done %>
   </div>
+  <br>
   <div class="actions">
     <%= f.submit %>
   </div>
 <% end %>
+<br>
+<%= link_to 'Back', project_path(@project) %>
