@@ -10,6 +10,15 @@ RSpec.describe ProjectsController, :type => :controller do
       get :index, {}, valid_session
       expect(assigns(:projects)).to eq [project]
     end
+
+    it "does not fetch any project records that have been soft-deleted" do
+      project = Project.create! valid_attributes
+      delete :destroy, {:id => project.to_param}, valid_session
+      project2 = Project.create!("title" => "MyString2")
+      get :index, {}, valid_session
+      expect(assigns(:projects)).to_not eq [project]
+      expect(assigns(:projects)).to eq [project2]
+    end
   end
 
   describe "GET show" do
@@ -129,11 +138,12 @@ RSpec.describe ProjectsController, :type => :controller do
   end
 
   describe "DELETE destroy" do
-    it "destroys the requested project" do
+    it 'soft-deletes the requested project' do
       project = Project.create! valid_attributes
       expect {
         delete :destroy, {:id => project.to_param}, valid_session
-      }.to change(Project, :count).by(-1)
+      }.to change(Project, :count).by(0)
+      expect(project.reload.deleted?).to be_truthy
     end
 
     it "redirects to the projects list" do
@@ -155,15 +165,22 @@ RSpec.describe ProjectsController, :type => :controller do
       expect(assigns(:project)).to eq(project)
     end
 
-    it 'does not destroy incomplete items' do
+    it 'does not soft-delete incomplete items' do
+      project.items.first.update(:done => false)
       delete :clear, { :id => project.to_param }
-      expect(project.items.count).to eq(1)
+      expect(project.reload.items.count).to eq(1)
+      project.items.each do |item|
+        expect(item.deleted?).to be_falsy
+      end
     end
 
-    it 'destroys complete items' do
+    it 'soft-deletes complete items' do
       project.items.first.update(:done => true)
       delete :clear, { :id => project.to_param }
-      expect(project.reload.items.count).to eq(0)
+      expect(project.reload.items.count).to eq(1)
+      project.items.each do |item|
+        expect(item.deleted?).to be_truthy
+      end
     end
   end
 end

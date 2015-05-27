@@ -2,7 +2,7 @@ class ProjectsController < ApplicationController
   before_action :set_project, :except => [:index, :new, :create]
 
   def index
-    @projects = Project.all
+    @projects = Project.all.where(deleted: [false, nil])
   end
 
   def show
@@ -40,7 +40,7 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
-    @project.destroy
+    @project.update!(:deleted => true)
     respond_to do |format|
       format.html { redirect_to projects_path,
                     :notice => 'Project was successfully destroyed.' }
@@ -48,7 +48,8 @@ class ProjectsController < ApplicationController
   end
 
   def clear
-    @project.items.complete.destroy_all
+    #@project.items.complete.destroy_all
+    @project.items.complete.update_all(:deleted => true)
     respond_to do |format|
       format.html { redirect_to project_path(@project),
                     :notice => 'There are no completed items for this project.' }
