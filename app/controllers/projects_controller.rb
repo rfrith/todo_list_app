@@ -1,11 +1,34 @@
 class ProjectsController < ApplicationController
-  before_action :set_project, :except => [:index, :new, :create]
+  before_action :set_project, :except => [:index, :new, :create, :show_all_project_details]
 
   def index
     @projects = Project.all.where(deleted: [false, nil])
   end
 
   def show
+  end
+
+  def show_all_project_details
+    @projects = Project.all.where(deleted: [false, nil])
+
+    filtered_project_list = []
+
+    @projects.each do |project|
+
+      items = []
+
+      project.items.each do |item|
+        items << {:action => item.action, :done => item.done}
+      end
+
+      filtered_project_list << {
+        :title => project.title, :items => items
+      }
+
+    end
+
+    render :json => filtered_project_list
+
   end
 
   def new
